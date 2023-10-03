@@ -14,7 +14,7 @@ namespace NotionAPIForUnity.Example
 
         private void Start()
         {
-            api = new(schemaObject.apiKey, true);
+            api = new NotionApi(schemaObject.apiKey, true);
         }
 
         public async void ShowQueryDatabase()

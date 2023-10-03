@@ -24,9 +24,9 @@ namespace NotionAPIForUnity.Runtime
         private bool busy = false;
         private readonly bool debugMode;
         private readonly string apiKey;
-        private readonly CancellationTokenSource source = new();
+        private readonly CancellationTokenSource source = new CancellationTokenSource();
 
-        private static List<string> apiKeys = new();
+        private static List<string> apiKeys = new List<string>();
 
         // NotionŒÅ—L
         private readonly static float updateThrottleSecond = 1;
@@ -207,9 +207,9 @@ namespace NotionAPIForUnity.Runtime
         private bool busy = false;
         private readonly bool debugMode;
         private readonly string apiKey;
-        private readonly CancellationTokenSource source = new();
+        private readonly CancellationTokenSource source = new CancellationTokenSource();
 
-        private static List<string> apiKeys = new();
+        private static List<string> apiKeys = new List<string>();
 
         // NotionŒÅ—L
         private readonly static float updateThrottleSecond = 1;
@@ -400,9 +400,9 @@ namespace NotionAPIForUnity.Runtime
         private bool busy = false;
         private readonly bool debugMode;
         private readonly string apiKey;
-        private readonly CancellationTokenSource source = new();
+        private readonly CancellationTokenSource source = new CancellationTokenSource();
 
-        private static List<string> apiKeys = new();
+        private static List<string> apiKeys = new List<string>();
 
         // NotionŒÅ—L
         private readonly static float updateThrottleSecond = 1;

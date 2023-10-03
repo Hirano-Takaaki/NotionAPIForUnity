@@ -3,7 +3,8 @@
     "rootNamespace": "NotionAPIForUnity.Example",
     "references": [
         "GUID:d553de10289f22049b9bcb40452dde8b",
-        "GUID:0af3dbfd97abce842bd65568d3486bf8"
+        "GUID:0af3dbfd97abce842bd65568d3486bf8",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
