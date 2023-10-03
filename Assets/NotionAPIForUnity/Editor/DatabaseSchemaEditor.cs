@@ -3,21 +3,25 @@ using System.Text;
 using UnityEngine;
 using BennyKok.NotionAPI.Editor.SimpleJSON;
 using System.Text.RegularExpressions;
+using Unity.EditorCoroutines.Editor;
 using System;
 using UnityEditor;
 using NotionAPIForUnity.Runtime;
 using System.Linq;
 using System.Reflection;
+using System.Collections;
 
 namespace NotionAPIForUnity.Editor
 {
     // Schema‚©‚çƒNƒ‰ƒX¶¬
+    // need Editor Coroutines Package
     [CustomEditor(typeof(DatabaseSchemaObject))]
     public class DatabaseSchemaEditor : UnityEditor.Editor
     {
         static readonly string PropertyNameSpace = "NotionAPIForUnity.Runtime";
 
         private bool busy;
+        private EditorCoroutine curentCoroutine;
 
         private DatabaseSchemaObject Target => target as DatabaseSchemaObject;
 
@@ -28,15 +32,15 @@ namespace NotionAPIForUnity.Editor
             bool isUpdateSchemaButtonDisable = busy || string.IsNullOrEmpty(Target.apiKey) || string.IsNullOrEmpty(Target.databaseId);
             bool isCreateSchemaClassButtonDisable = busy || Target.fieldNames == null || Target.fieldNames.Count == 0;
 
-            using (EditorGUI.DisabledGroupScope scope = new(isUpdateSchemaButtonDisable))
+            using (var scope = new EditorGUI.DisabledGroupScope(isUpdateSchemaButtonDisable))
             {
                 if (GUILayout.Button("Fetch Schema"))
                 {
-                    FetchSchema();
+                    curentCoroutine = EditorCoroutineUtility.StartCoroutine(FetchSchema(), this);
                 }
             }
 
-            using (EditorGUI.DisabledGroupScope scope = new(isCreateSchemaClassButtonDisable))
+            using (var scope = new EditorGUI.DisabledGroupScope(isCreateSchemaClassButtonDisable))
             {
                 if (GUILayout.Button("Create Schema Class"))
                 {
@@ -45,13 +49,25 @@ namespace NotionAPIForUnity.Editor
             }
         }
 
-        internal async Awaitable FetchSchema()
+        private void OnDisable()
+        {
+            if (curentCoroutine == null) { return; }
+            EditorCoroutineUtility.StopCoroutine(curentCoroutine);
+            curentCoroutine = null;
+        }
+
+        internal IEnumerator FetchSchema()
         {
             var api = new NotionApi(Target.apiKey, true);
 
             busy = true;
+            var json = "";
 
-            var json = await api.GetDatabaseJSON(Target.databaseId);
+            void SetJson(string val)
+            {
+                json = val;
+            }
+            yield return api.GetDatabaseJSON(Target.databaseId, SetJson);
             Debug.Log(json);
             var parseJson = JSON.Parse(json);
 

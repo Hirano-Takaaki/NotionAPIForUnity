@@ -73,7 +73,7 @@ namespace NotionAPIForUnity.Runtime
             return request;
         }
 
-        internal IEnumerator GetJSONAsync(string url, Action<string> callback = null)
+        internal IEnumerator GetJsonAsync(string url, Action<string> callback = null)
         {
             if (debugMode)
             {
@@ -91,7 +91,7 @@ namespace NotionAPIForUnity.Runtime
             }
         }
 
-        internal IEnumerator PostJSON(string url, WWWForm form, Action<string> callback = null)
+        internal IEnumerator PostJsonAsync(string url, WWWForm form, Action<string> callback = null)
         {
             if (debugMode)
             {
@@ -135,7 +135,7 @@ namespace NotionAPIForUnity.Runtime
             {
                 json = val;
             }
-            yield return GetJSONAsync(url, SetJson);
+            yield return GetJsonAsync(url, SetJson);
             callback?.Invoke(json);
         }
 
@@ -166,7 +166,7 @@ namespace NotionAPIForUnity.Runtime
             {
                 json = val;
             }
-            yield return PostJSON(url, form, SetJson);
+            yield return PostJsonAsync(url, form, SetJson);
             callback?.Invoke(json);
         }
 
@@ -179,7 +179,7 @@ namespace NotionAPIForUnity.Runtime
             {
                 json = val;
             }
-            yield return GetJSONAsync(url, SetJson);
+            yield return GetJsonAsync(url, SetJson);
             if (debugMode)
             {
                 Debug.Log(json);
@@ -194,7 +194,7 @@ namespace NotionAPIForUnity.Runtime
             busy = false;
         }
 
-        public IEnumerator WaitBusyWhile()
+        private IEnumerator WaitBusyWhile()
         {
             yield return new WaitUntil(() => !busy);
         }
