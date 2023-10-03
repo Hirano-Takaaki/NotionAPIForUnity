@@ -12,11 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b34804d6809d3814185c9084627e0efd, type: 3}
   m_Name: ExsampleDatabaseSchema
   m_EditorClassIdentifier: 
-  apiKey: secret_rA9DnrJ4o9vqPAQKlmdvQmV3LBIxJ4mfiUGsOSFAD5y
-  databaseId: 7fd3126983a144a398f3e5369a619418
-  fieldTypes:
-  - number
-  - title
-  fieldNames:
-  - num
-  - name
+  apiKey: 
+  databaseId: 
+  fieldTypes: []
+  fieldNames: []

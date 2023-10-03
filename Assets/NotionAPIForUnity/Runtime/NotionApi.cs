@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -9,7 +11,7 @@ using UnityEngine.Networking;
 namespace NotionAPIForUnity.Runtime
 {
 
-    public class NotionApi : IDisposable
+    public partial class NotionApi : IDisposable
     {
         enum RequestType
         {
@@ -17,12 +19,15 @@ namespace NotionAPIForUnity.Runtime
             POST
         }
 
+        private bool busy = false;
         private readonly bool debugMode;
         private readonly string apiKey;
+        private readonly CancellationTokenSource source = new();
 
         private static List<string> apiKeys = new();
 
         // Notion固有
+        private readonly static float updateThrottleSecond = 1;
         private readonly static string versionLavel = "v1";
         // NOTE: 自動取得ではないのでNotion側がUpdateしたら動かない。
         // 参考 https://developers.notion.com/reference/versioning
@@ -60,7 +65,7 @@ namespace NotionAPIForUnity.Runtime
             return request;
         }
 
-        public async Awaitable<string> GetJSON(string url, Action<string> callback = null)
+        internal async Awaitable<string> GetJSON(string url, Action<string> callback = null)
         {
             if (debugMode)
             {
@@ -69,14 +74,18 @@ namespace NotionAPIForUnity.Runtime
 
             using (var request = WebRequestWithAuth(url, RequestType.GET))
             {
+                // NOTE: Awaitableに対応するため,UnityのAPI更新後変更
+                await WaitBusyWhile();
+                busy = true;
                 await request.SendWebRequest();
+                WaitBusyUpdate();
                 var jsonData = request.downloadHandler.text;
                 callback?.Invoke(jsonData);
                 return jsonData;
             }
         }
 
-        public async Awaitable<string> PostJSON(string url, WWWForm form, Action<string> callback = null)
+        internal async Awaitable<string> PostJSON(string url, WWWForm form, Action<string> callback = null)
         {
             if (debugMode)
             {
@@ -84,7 +93,11 @@ namespace NotionAPIForUnity.Runtime
             }
             using (var request = WebRequestWithAuth(url, RequestType.POST, form))
             {
+                // NOTE: Awaitableに対応するため,UnityのAPI更新後変更
+                await WaitBusyWhile();
+                busy = true;
                 await request.SendWebRequest();
+                WaitBusyUpdate();
                 var jsonData = request.downloadHandler.text;
                 callback?.Invoke(jsonData);
                 return jsonData;
@@ -130,6 +143,11 @@ namespace NotionAPIForUnity.Runtime
             return json;
         }
 
+        //public async Awaitable<DatabaseQueryResponse<T>> PostDatabase<T>()
+        //{
+
+        //}
+
         public async Awaitable<DatabaseUsers> GetUsers(Action<DatabaseUsers> callback = null)
         {
             var url = $"{urlUsers}/";
@@ -141,6 +159,27 @@ namespace NotionAPIForUnity.Runtime
             var users = JsonUtility.FromJson<DatabaseUsers>(json);
             callback?.Invoke(users);
             return users;
+        }
+
+        private async void WaitBusyUpdate()
+        {
+            await Awaitable.WaitForSecondsAsync(updateThrottleSecond);
+            busy = false;
+        }
+
+        public async Awaitable WaitBusyWhile()
+        {
+            while (true)
+            {
+                if (busy)
+                {
+                    await Awaitable.NextFrameAsync(source.Token);
+                }
+                else
+                {
+                    return;
+                }
+            }
         }
 
         public void Dispose()

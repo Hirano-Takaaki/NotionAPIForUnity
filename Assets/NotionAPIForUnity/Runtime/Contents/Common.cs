@@ -6,8 +6,8 @@ namespace NotionAPIForUnity.Runtime
     public class IDObject
     {
         public string id;
-        public string created_time;
-        public string last_edited_time;
+        public string createdTime;
+        public string lastEditedTime;
     }
 
     [Serializable]
