@@ -9,9 +9,15 @@ namespace NotionAPIForUnity.Runtime
 
     public static class AsyncProcessHandleExtension
     {
-        public static AsyncProcessHandle ToAsyncProcessHandle(this IEnumerator enumerator)
+        public async static Task<T> ToAsync<T>(this IEnumerator enumerator) where T : class
         {
-            return CustomCoroutineManager.Instance.StartCoroutine(enumerator);
+            var result = await CustomCoroutineManager.Instance.StartCoroutine(enumerator).Task;
+            return result as T;
+        }
+
+        public async static Task<object> ToAsync(this IEnumerator enumerator)
+        {
+            return await CustomCoroutineManager.Instance.StartCoroutine(enumerator).Task;
         }
     }
 }

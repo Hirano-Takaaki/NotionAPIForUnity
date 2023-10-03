@@ -88,6 +88,7 @@ namespace NotionAPIForUnity.Runtime
                 WaitBusyRealTime();
                 var jsonData = request.downloadHandler.text;
                 callback?.Invoke(jsonData);
+                yield return jsonData;
             }
         }
 
@@ -106,6 +107,7 @@ namespace NotionAPIForUnity.Runtime
                 WaitBusyRealTime();
                 var jsonData = request.downloadHandler.text;
                 callback?.Invoke(jsonData);
+                yield return jsonData;
             }
         }
 
@@ -124,6 +126,7 @@ namespace NotionAPIForUnity.Runtime
             }
             var database = JsonUtility.FromJson<Database<T>>(json);
             callback?.Invoke(database);
+            yield return database;
         }
 
         internal IEnumerator GetDatabaseJSON(string databaseId, Action<string> callback = null)
@@ -137,6 +140,7 @@ namespace NotionAPIForUnity.Runtime
             }
             yield return GetJsonAsync(url, SetJson);
             callback?.Invoke(json);
+            yield return json;
         }
 
         public IEnumerator QueryDatabase<T>(string databaseId, Action<DatabaseQueryResponse<T>> callback = null)
@@ -155,6 +159,7 @@ namespace NotionAPIForUnity.Runtime
             }
             var queryResponse = JsonUtility.FromJson<DatabaseQueryResponse<T>>(json);
             callback?.Invoke(queryResponse);
+            yield return queryResponse;
         }
 
         internal IEnumerator QueryDatabaseJSON(string databaseId, WWWForm form = null, Action<string> callback = null)
@@ -168,6 +173,7 @@ namespace NotionAPIForUnity.Runtime
             }
             yield return PostJsonAsync(url, form, SetJson);
             callback?.Invoke(json);
+            yield return json;
         }
 
         public IEnumerator GetUsers(Action<DatabaseUsers> callback = null)
@@ -186,6 +192,7 @@ namespace NotionAPIForUnity.Runtime
             }
             var users = JsonUtility.FromJson<DatabaseUsers>(json);
             callback?.Invoke(users);
+            yield return users;
         }
 
         private IEnumerator WaitBusyRealTime()

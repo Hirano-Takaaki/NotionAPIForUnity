@@ -21,12 +21,7 @@ namespace NotionAPIForUnity.Example
         public async void ShowQueryDatabase()
         {
             // SchemaƒNƒ‰ƒX‚ð‚¢‚ê‚é
-            DatabaseQueryResponse<ExsampleDatabaseSchema> queryResponse = null;
-            void SetValue(DatabaseQueryResponse<ExsampleDatabaseSchema> val)
-            {
-                queryResponse = val;
-            }
-            await api.QueryDatabase<ExsampleDatabaseSchema>(schemaObject.databaseId, SetValue).ToAsyncProcessHandle().Task;
+            var queryResponse = await api.QueryDatabase<ExampleSchema>(schemaObject.databaseId).ToAsync<DatabaseQueryResponse<ExampleSchema>>() ;
             for (int i = 0; i < queryResponse.results.Length; i++)
             {
                 // ”z‰º‚É¶¬‚µ‚½•Ï”‚ª‚¢‚é

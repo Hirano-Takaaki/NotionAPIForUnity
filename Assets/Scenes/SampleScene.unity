@@ -164,7 +164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe0690a9fdae2ea4d9e6740855d3f16d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  schemaObject: {fileID: 11400000, guid: 552b15589dcd26a419d145175d704d27, type: 2}
+  schemaObject: {fileID: 11400000, guid: ea4a3d4a0d95123479b530f9ff0f01ec, type: 2}
 --- !u!1 &518929810
 GameObject:
   m_ObjectHideFlags: 0
