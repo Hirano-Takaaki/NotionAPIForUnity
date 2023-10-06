@@ -177,7 +177,7 @@ namespace NotionAPIForUnity.Runtime
             }
         }
 
-        public IEnumerator GetDatabase<T>(string databaseId, Action<Database<T>> callback = null)
+        public IEnumerator GetDatabase<T>(string databaseId, Action<Database<T>> callback = null) where T : Schema
         {
             var json = "";
 
@@ -205,7 +205,7 @@ namespace NotionAPIForUnity.Runtime
             yield return json;
         }
 
-        public IEnumerator GetQueryDatabase<T>(string databaseId, Action<DatabaseQuery<T>> callback = null)
+        public IEnumerator GetQueryDatabase<T>(string databaseId, Action<DatabaseQuery<T>> callback = null) where T : Schema
         {
             var json = "";
             void SetJson(string val)
@@ -232,7 +232,7 @@ namespace NotionAPIForUnity.Runtime
             yield return json;
         }
 
-        public IEnumerator PatchPageDatabase<T>(string pageId, DatabasePage<T> updateData, Action<DatabasePage<T>> callback = null) where T : class
+        public IEnumerator PatchPageDatabase<T>(string pageId, DatabasePage<T> updateData, Action<DatabasePage<T>> callback = null) where T : Schema
         {
             var json = "";
             var updateDataJson = JsonUtility.ToJson(updateData);
@@ -261,7 +261,7 @@ namespace NotionAPIForUnity.Runtime
             yield return json;
         }
 
-        public IEnumerator PostPageDatabase<T>(DatabasePage<T> updateData, Action<DatabasePage<T>> callback = null) where T : class
+        public IEnumerator PostPageDatabase<T>(DatabasePage<T> updateData, Action<DatabasePage<T>> callback = null) where T : Schema
         {
             var json = "";
             var updateDataJson = JsonUtility.ToJson(updateData);

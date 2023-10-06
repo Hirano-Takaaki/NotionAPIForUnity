@@ -183,7 +183,7 @@ using {PropertyNameSpace};
 using System;
 
 [Serializable]
-public partial class {className}
+public partial class {className} : Schema
 {{
 {classStringBuilder}
 }}
