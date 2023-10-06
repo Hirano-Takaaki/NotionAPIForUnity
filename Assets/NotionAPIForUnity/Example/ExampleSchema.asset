@@ -17,12 +17,16 @@ MonoBehaviour:
   fieldTypes:
   - rich_text
   - date
+  - select
   - number
+  - multi_select
   - rich_text
   - title
   fieldNames:
   - discription
   - date
+  - select
   - num
+  - mulitiSelect
   - lavel
   - name

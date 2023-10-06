@@ -3,14 +3,14 @@ using System;
 namespace NotionAPIForUnity.Runtime
 {
     [Serializable]
-    public class PropertyBase
+    public class Property
     {
         public string type;
         public string id;
     }
 
     [Serializable]
-    public class OptionBase
+    public class OptionEntry
     {
         public string id;
         public string name;
@@ -20,69 +20,76 @@ namespace NotionAPIForUnity.Runtime
     [Serializable]
     public class Options
     {
-        public OptionBase[] options;
+        public OptionEntry[] options;
     }
 
     [Serializable]
-    public class SelectProperty : PropertyBase
+    public class MultiSelectPropertyDefinition : Property
     {
-        public OptionBase select;
-        public OptionBase Value => select;
+        public Options multi_select;
     }
 
     [Serializable]
-    public class MultiSelectProperty : PropertyBase
+    public class SelectProperty : Property
     {
-        public OptionBase[] multi_select;
-        public OptionBase[] Value => multi_select;
+        public OptionEntry select;
+        public OptionEntry Value => select;
     }
 
     [Serializable]
-    public class SelectPropertyDefinition : PropertyBase
+    public class MultiSelectProperty : Property
+    {
+        public OptionEntry[] multi_select;
+        public OptionEntry[] Value => multi_select;
+    }
+
+    [Serializable]
+    public class SelectPropertyDefinition : Property
     {
         public Options select;
     }
 
     [Serializable]
-    public class TitleProperty : PropertyBase
+    public class TitleProperty : Property
     {
-        public NotionText[] title;
+        public Text[] title;
         public string Value
         => (title != null && title.Length > 0) ? title[0].text : null;
     }
 
     [Serializable]
-    public class TextPropertyDefinition : PropertyBase
+    public class TextPropertyDefinition : Property
     {
-        public NotionText[] text;
+        public Text[] text;
         public string Value
         => (text != null && text.Length > 0) ? text[0].plain_text : null;
     }
 
     [Serializable]
-    public class RichTextProperty : PropertyBase
+    public class TextProperty : Property
     {
-        public NotionText[] rich_text;
+        public Text[] rich_text;
         public string Value
         => (rich_text != null && rich_text.Length > 0) ? rich_text[0].plain_text : null;
     }
 
     [Serializable]
-    public class FormulaStringProperty : PropertyBase
+    public class FormulaStringProperty : Property
     {
         public FormulaString formula;
-        public string Value => formula.value;
+        public string Value
+        => formula.@string;
 
         [Serializable]
         public class FormulaString
         {
             public string type;
-            public string value;
+            public string @string;
         }
     }
 
     [Serializable]
-    public class NumberProperty : PropertyBase
+    public class NumberProperty : Property
     {
         public float number;
         public float Value => number;
@@ -91,7 +98,7 @@ namespace NotionAPIForUnity.Runtime
     }
 
     [Serializable]
-    public class CheckboxProperty : PropertyBase
+    public class CheckboxProperty : Property
     {
         public bool checkbox;
         public bool Value => checkbox;
@@ -100,7 +107,7 @@ namespace NotionAPIForUnity.Runtime
     }
 
     [Serializable]
-    public class DateProperty : PropertyBase
+    public class DateProperty : Property
     {
         public Date date;
     }
@@ -112,7 +119,7 @@ namespace NotionAPIForUnity.Runtime
     }
 
     [Serializable]
-    public class UserObject : PropertyBase
+    public class UserObject : Property
     {
         public string name;
         public string avatar_url;
@@ -120,7 +127,7 @@ namespace NotionAPIForUnity.Runtime
     }
 
     [Serializable]
-    public class PeopleProperty : PropertyBase
+    public class PeopleProperty : Property
     {
         public UserObject[] people;
         public UserObject[] Value => people;

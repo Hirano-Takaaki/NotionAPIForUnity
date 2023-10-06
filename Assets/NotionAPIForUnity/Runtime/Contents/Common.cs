@@ -6,15 +6,21 @@ namespace NotionAPIForUnity.Runtime
     public class IDObject
     {
         public string id;
-        public string createdTime;
-        public string lastEditedTime;
+        public string created_time;
+        public string last_edited_time;
     }
 
     [Serializable]
     public class Database<T> : IDObject
     {
-        public NotionText[] title;
+        public Text[] title;
         public T properties;
+    }
+
+    [Serializable]
+    public class Parent 
+    {
+        public string database_id;
     }
 
     [Serializable]
@@ -24,9 +30,16 @@ namespace NotionAPIForUnity.Runtime
     }
 
     [Serializable]
-    public class DatabaseQueryResponse<T>
+    public class DatabaseQuery<T>
     {
         public Page<T>[] results;
+    }
+
+    [Serializable]
+    public class DatabasePage<T>
+    {
+        public Parent parent;
+        public T properties;
     }
 
     [Serializable]

@@ -2,6 +2,7 @@ using NotionAPIForUnity.Runtime;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 
 namespace NotionAPIForUnity.Example
@@ -21,14 +22,19 @@ namespace NotionAPIForUnity.Example
         public async void ShowQueryDatabase()
         {
             // SchemaÉNÉâÉXÇÇ¢ÇÍÇÈ
-            var queryResponse = await api.QueryDatabase<ExampleSchema>(schemaObject.databaseId).ToAsync<DatabaseQueryResponse<ExampleSchema>>() ;
-            for (int i = 0; i < queryResponse.results.Length; i++)
+            var queryResponse = await api.GetQueryDatabase<ExampleSchema>(schemaObject.databaseId).ToAsync<DatabaseQuery<ExampleSchema>>();
+
+
+            queryResponse.results[0].properties.num.number = 999;
+
+            _ = await api.PostPageDatabase(new DatabasePage<ExampleSchema>()
             {
-                // îzâ∫Ç…ê∂ê¨ÇµÇΩïœêîÇ™Ç¢ÇÈ
-                Debug.Log(queryResponse.results[i].properties.name.Value);
-                Debug.Log(queryResponse.results[i].properties.num.number);
-                Debug.Log(queryResponse.results[i].properties.discription.rich_text.FirstOrDefault().text.content);
-            }
+                parent = new Parent()
+                {
+                    database_id = schemaObject.databaseId
+                },
+                properties = queryResponse.results[0].properties
+            }).ToAsync<ExampleSchema>();
         }
     }
 }
