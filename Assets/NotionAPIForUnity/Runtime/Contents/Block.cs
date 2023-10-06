@@ -13,6 +13,25 @@ namespace NotionAPIForUnity.Runtime
         public string plain_text;
         public string href;
 
+        public static Text DefaultText => new Text()
+        {
+            type = "",
+            text = new TextContent()
+            {
+                content = ""
+            },
+            annotations = new Annotations()
+            {
+                bold = false,
+                italic = false,
+                strikethrough = false,
+                underline = false,
+                code = false,
+                color = ""
+            },
+            plain_text = "",
+            href = ""
+        };
 
         [Serializable]
         public class TextContent
@@ -55,6 +74,7 @@ namespace NotionAPIForUnity.Runtime
 
         public void OnBeforeSerialize()
         {
+            if (isISOChanged) { return; }
             isISOChanged = true;
             if (start != null && start != string.Empty)
             {
