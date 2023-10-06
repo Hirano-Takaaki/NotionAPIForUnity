@@ -3,11 +3,11 @@ using NotionAPIForUnity.Runtime;
 using System;
 
 [Serializable]
-public partial class PlayerSchema : Schema
+public partial class ExampleSchema : Schema
 {
     public TextProperty discription;
     public SelectProperty select;
-    public NumberProperty playerId;
+    public NumberProperty Id;
     public MultiSelectProperty mulitiSelect;
     public TitleProperty name;
 
