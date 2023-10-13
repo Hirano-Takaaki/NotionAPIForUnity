@@ -3,7 +3,7 @@ using NotionAPIForUnity.Runtime;
 using System;
 
 [Serializable]
-public partial class ExampleSchema : Schema
+public partial class __ExampleSchema : Schema
 {
     public TextProperty discription;
     public SelectProperty select;
