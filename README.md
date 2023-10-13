@@ -13,21 +13,14 @@ Notionデータベース化計画
 ## Notionのデータをロード
 サンプルコード
 ```c#:NotionLoad
-var response = await api.GetQueryDatabase<PlayerSchema>(schemaObject.databaseId).ToAsync<DatabaseQuery<PlayerSchema>>();
+var result = await api.GetQueryDatabaseAsync<__ExampleSchema>();
 ```
 
 ## Notionのデータに書き込み
 サンプルコード
 propertiesを編集したのちに呼び出すとNotion側が更新される
 ```c#:NotionLoad
-var response = await api.PatchPageDatabase<PlayerSchema>(pageId, new DatabasePage<PlayerSchema>()
-        {
-            parent = new Parent()
-            {
-                database_id = databaseId
-            },
-            properties = properties
-        }).ToAsync<DatabasePage<PlayerSchema>>();
+var result = await api.PatchPageDatabaseAsync<__ExampleSchema>(page);
 ```
 
 ## Notionのデータを追加
@@ -35,12 +28,5 @@ var response = await api.PatchPageDatabase<PlayerSchema>(pageId, new DatabasePag
 propertiesを生成したのちに呼び出すとNotion側で生成される
 ※生成は他のプロパティをコピーし生成するほうが早い
 ```c#:NotionLoad
-var response = await api.PostPageDatabase<PlayerSchema>(new DatabasePage<PlayerSchema>()
-            {
-                parent = new Parent()
-                {
-                    database_id = databaseId
-                },
-                properties = properties
-            }).ToAsync<DatabasePage<PlayerSchema>>();
+var result = await api.PostPageDatabaseAsync<__ExampleSchema>(page);
 ```
