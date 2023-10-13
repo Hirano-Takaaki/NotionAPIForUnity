@@ -1,4 +1,4 @@
-using NotionAPIForUnity.Runtime;
+﻿using NotionAPIForUnity.Runtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,12 +23,14 @@ namespace NotionAPIForUnity.Runtime
         }
 
         private DateTime timeStamp = DateTime.Now;
+        private string apiKey;
+        private string databaseId;
         private readonly bool debugMode;
         private readonly int timeout;
-        private readonly string apiKey;
         private readonly CancellationTokenSource source = new CancellationTokenSource();
 
         private static List<string> apiKeys = new List<string>();
+        private static List<string> databaseIds = new List<string>();
 
         // Notion固有
         private readonly static bool isActiveUpdateThrottle = false;
@@ -44,13 +46,36 @@ namespace NotionAPIForUnity.Runtime
         private readonly static string urlUsers = rootUrl + "/users";
 
         public static IReadOnlyList<string> VaildApiKeys => apiKeys.AsReadOnly();
+        public static IReadOnlyList<string> VaildDatabaseIds => databaseIds.AsReadOnly();
 
-        public NotionApi(string apiKey, bool isDebug = false, int timeout = 30)
+        public NotionApi(string apiKey, string databaseId, bool isDebug = false, int timeout = 30)
+        {
+            SetApiKey(apiKey);
+            SetDatabaseId(databaseId);
+
+            debugMode = isDebug;
+            this.timeout = timeout;
+        }
+
+        public NotionApi(in DatabaseSchemaObject schemaObject, bool isDebug = false, int timeout = 30)
+        {
+            SetApiKey(schemaObject.apiKey);
+            SetDatabaseId(schemaObject.databaseId);
+
+            debugMode = isDebug;
+            this.timeout = timeout;
+        }
+
+        public void SetApiKey(string apiKey)
         {
             this.apiKey = apiKey;
             apiKeys.Add(apiKey);
-            debugMode = isDebug;
-            this.timeout = timeout;
+        }
+
+        public void SetDatabaseId(string databaseId)
+        {
+            this.databaseId = databaseId;
+            databaseIds.Add(databaseId);
         }
 
         private UnityWebRequest WebRequestWithAuth(string uri, RequestType requestType, byte[] bodyData = null, KeyValuePair<string, string>[] requestHeaders = null)
@@ -177,7 +202,14 @@ namespace NotionAPIForUnity.Runtime
             }
         }
 
-        public IEnumerator GetDatabase<T>(string databaseId, Action<Database<T>> callback = null) where T : Schema
+        /// <summary>
+        /// データベースの情報取得
+        /// ※中身は取得できない
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="callback"></param>
+        /// <returns></returns>
+        public IEnumerator GetDatabase<T>(Action<Database<T>> callback = null) where T : Schema
         {
             var json = "";
 
@@ -185,13 +217,13 @@ namespace NotionAPIForUnity.Runtime
             {
                 json = val;
             }
-            yield return GetDatabaseJSON(databaseId, SetJson);
+            yield return GetDatabaseJSON(SetJson);
             var database = JsonUtility.FromJson<Database<T>>(json);
             callback?.Invoke(database);
             yield return database;
         }
 
-        internal IEnumerator GetDatabaseJSON(string databaseId, Action<string> callback = null)
+        internal IEnumerator GetDatabaseJSON(Action<string> callback = null)
         {
             var url = $"{urlDB}/{databaseId}";
             var json = "";
@@ -205,20 +237,26 @@ namespace NotionAPIForUnity.Runtime
             yield return json;
         }
 
-        public IEnumerator GetQueryDatabase<T>(string databaseId, Action<DatabaseQuery<T>> callback = null) where T : Schema
+        /// <summary>
+        /// データベースのコンテンツの取得
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="callback"></param>
+        /// <returns></returns>
+        public IEnumerator GetQueryDatabase<T>(Action<DatabaseQuery<T>> callback = null) where T : Schema
         {
             var json = "";
             void SetJson(string val)
             {
                 json = val;
             }
-            yield return GetQueryDatabaseJson(databaseId, SetJson);
+            yield return GetQueryDatabaseJson(SetJson);
             var queryResponse = JsonUtility.FromJson<DatabaseQuery<T>>(json);
             callback?.Invoke(queryResponse);
             yield return queryResponse;
         }
 
-        internal IEnumerator GetQueryDatabaseJson(string databaseId, Action<string> callback = null)
+        internal IEnumerator GetQueryDatabaseJson(Action<string> callback = null)
         {
             var url = $"{urlDB}/{databaseId}/{queryLavel}";
             var json = "";
@@ -232,16 +270,24 @@ namespace NotionAPIForUnity.Runtime
             yield return json;
         }
 
-        public IEnumerator PatchPageDatabase<T>(string pageId, DatabasePage<T> updateData, Action<DatabasePage<T>> callback = null) where T : Schema
+        /// <summary>
+        /// データベースのコンテンツの更新
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="pageId"></param>
+        /// <param name="updatePage"></param>
+        /// <param name="callback"></param>
+        /// <returns></returns>
+        public IEnumerator PatchPageDatabase<T>(DatabasePage<T> updatePage, Action<DatabasePage<T>> callback = null) where T : Schema
         {
             var json = "";
-            var updateDataJson = JsonUtility.ToJson(updateData);
+            var updateDataJson = JsonUtility.ToJson(updatePage);
 
             void SetJson(string val)
             {
                 json = val;
             }
-            yield return PatchPageDatabaseJson(pageId, Encoding.UTF8.GetBytes(updateDataJson), SetJson);
+            yield return PatchPageDatabaseJson(updatePage.id, Encoding.UTF8.GetBytes(updateDataJson), SetJson);
             var queryResponse = JsonUtility.FromJson<DatabasePage<T>>(json);
             callback?.Invoke(queryResponse);
             yield return queryResponse;
@@ -261,10 +307,17 @@ namespace NotionAPIForUnity.Runtime
             yield return json;
         }
 
-        public IEnumerator PostPageDatabase<T>(DatabasePage<T> updateData, Action<DatabasePage<T>> callback = null) where T : Schema
+        /// <summary>
+        /// データベースのコンテンツの作成
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="createPage"></param>
+        /// <param name="callback"></param>
+        /// <returns></returns>
+        public IEnumerator PostPageDatabase<T>(DatabasePage<T> createPage, Action<DatabasePage<T>> callback = null) where T : Schema
         {
             var json = "";
-            var updateDataJson = JsonUtility.ToJson(updateData);
+            var updateDataJson = JsonUtility.ToJson(createPage);
 
             Debug.Log(updateDataJson);
 

@@ -1,4 +1,4 @@
-using System.IO;
+ï»¿using System.IO;
 using System.Text;
 using UnityEngine;
 using BennyKok.NotionAPI.Editor.SimpleJSON;
@@ -7,14 +7,12 @@ using Unity.EditorCoroutines.Editor;
 using System;
 using UnityEditor;
 using NotionAPIForUnity.Runtime;
-using System.Linq;
-using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace NotionAPIForUnity.Editor
 {
-    // Schema‚©‚çƒNƒ‰ƒX¶¬
+    // Schemaã‹ã‚‰ã‚¯ãƒ©ã‚¹ç”Ÿæˆ
     // need Editor Coroutines Package
     [CustomEditor(typeof(DatabaseSchemaObject))]
     public class DatabaseSchemaEditor : UnityEditor.Editor
@@ -60,7 +58,7 @@ namespace NotionAPIForUnity.Editor
 
         internal IEnumerator FetchSchema()
         {
-            var api = new NotionApi(Target.apiKey, true);
+            var api = new NotionApi(Target);
 
             busy = true;
             var json = "";
@@ -69,7 +67,7 @@ namespace NotionAPIForUnity.Editor
             {
                 json = val;
             }
-            yield return api.GetDatabaseJSON(Target.databaseId, SetJson);
+            yield return api.GetDatabaseJSON(SetJson);
             Debug.Log(json);
             justJsonNode = JSON.Parse(json);
 
@@ -136,7 +134,7 @@ namespace NotionAPIForUnity.Editor
                     }
                     else
                     {
-                        Debug.LogWarning("ƒLƒƒƒbƒVƒ…‚ªƒNƒŠƒA‚³‚ê‚Ä‚¢‚Ü‚·BÄ“xFetch‚µ‚Ä‚­‚¾‚³‚¢B");
+                        Debug.LogWarning("ã‚­ãƒ£ãƒƒã‚·ãƒ¥ãŒã‚¯ãƒªã‚¢ã•ã‚Œã¦ã„ã¾ã™ã€‚å†åº¦Fetchã—ã¦ãã ã•ã„ã€‚");
                     }
                     enumStringBuilder.Append("}");
                     enumStringBuilder.Append(Environment.NewLine);
@@ -169,7 +167,7 @@ namespace NotionAPIForUnity.Editor
                     }
                     else
                     {
-                        Debug.LogWarning("ƒLƒƒƒbƒVƒ…‚ªƒNƒŠƒA‚³‚ê‚Ä‚¢‚Ü‚·BÄ“xFetch‚µ‚Ä‚­‚¾‚³‚¢B");
+                        Debug.LogWarning("ã‚­ãƒ£ãƒƒã‚·ãƒ¥ãŒã‚¯ãƒªã‚¢ã•ã‚Œã¦ã„ã¾ã™ã€‚å†åº¦Fetchã—ã¦ãã ã•ã„ã€‚");
                     }
                     enumStringBuilder.Append("}");
                     enumStringBuilder.Append(Environment.NewLine);
@@ -178,7 +176,7 @@ namespace NotionAPIForUnity.Editor
             }
 
             string generateClassStr =
-$@"// ©“®¶¬‚³‚ê‚½ƒtƒ@ƒCƒ‹‚Å‚·Bè“®‚Å‘‚«Š·‚¦‚È‚¢‚Å‚­‚¾‚³‚¢B
+$@"// è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«ã§ã™ã€‚æ‰‹å‹•ã§æ›¸ãæ›ãˆãªã„ã§ãã ã•ã„ã€‚
 using {PropertyNameSpace};
 using System;
 
