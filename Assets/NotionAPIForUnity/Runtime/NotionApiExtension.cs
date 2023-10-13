@@ -16,9 +16,9 @@ namespace NotionAPIForUnity.Runtime
         /// <param name="api"></param>
         /// <param name="callback"></param>
         /// <returns></returns>
-        public async static Task<Database<T>> GetDatabaseAsync<T>(this NotionApi api, Action<Database<T>> callback = null) where T : Schema
+        public async static Task<Database<T>> GetDatabaseInfoAsync<T>(this NotionApi api, Action<Database<T>> callback = null) where T : Schema
         {
-            return await api.GetDatabase(callback).ToAsync<Database<T>>();
+            return await api.GetDatabaseInfo(callback).ToAsync<Database<T>>();
         }
 
         /// <summary>

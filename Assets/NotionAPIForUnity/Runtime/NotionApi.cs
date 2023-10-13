@@ -12,7 +12,6 @@ using UnityEngine.Networking;
 [assembly: InternalsVisibleTo("NotionAPIForUnity.Editor")]
 namespace NotionAPIForUnity.Runtime
 {
-
     public class NotionApi : IDisposable
     {
         enum RequestType
@@ -209,7 +208,7 @@ namespace NotionAPIForUnity.Runtime
         /// <typeparam name="T"></typeparam>
         /// <param name="callback"></param>
         /// <returns></returns>
-        public IEnumerator GetDatabase<T>(Action<Database<T>> callback = null) where T : Schema
+        public IEnumerator GetDatabaseInfo<T>(Action<Database<T>> callback = null) where T : Schema
         {
             var json = "";
 
