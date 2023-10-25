@@ -47,6 +47,8 @@ namespace NotionAPIForUnity.Runtime
         public Parent parent;
 
         public string DatabaseId => parent.database_id;
+
+        public T DatabaseData => properties;
     }
 
     [Serializable]

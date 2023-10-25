@@ -1,6 +1,7 @@
 ﻿using NotionAPIForUnity.Runtime;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Tests : MonoBehaviour
@@ -13,7 +14,7 @@ public class Tests : MonoBehaviour
     // Start is called before the first frame update
     async void Start()
     {
-        api = new NotionApi(schemaObject, true);
+
     }
 
     // Update is called once per frame

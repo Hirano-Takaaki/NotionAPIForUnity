@@ -16,16 +16,11 @@ public partial class __ExampleSchema : Schema
 [Serializable]
 public enum select_Enum
 {
-    Bar,
-    Foo,
 }
 
 [Serializable]
 public enum MulitiSelect_Enum
 {
-    Piyo,
-    Fuga,
-    Hoge,
 }
 
 

@@ -31,6 +31,7 @@ namespace NotionAPIForUnity.Editor
 
             bool isUpdateSchemaButtonDisable = busy || string.IsNullOrEmpty(Target.apiKey) || string.IsNullOrEmpty(Target.databaseId);
             bool isCreateSchemaClassButtonDisable = busy || Target.fieldNames == null || Target.fieldNames.Count == 0;
+            bool isCreateSerializeDataButtonDisable = busy || string.IsNullOrEmpty(Target.apiKey) || string.IsNullOrEmpty(Target.databaseId);
 
             using (var scope = new EditorGUI.DisabledGroupScope(isUpdateSchemaButtonDisable))
             {
@@ -45,6 +46,14 @@ namespace NotionAPIForUnity.Editor
                 if (GUILayout.Button("Create Schema Class"))
                 {
                     CreateCodeSchemaFile(Target);
+                }
+            }
+
+            using (var scope = new EditorGUI.DisabledGroupScope(isCreateSerializeDataButtonDisable))
+            {
+                if (GUILayout.Button("Create Serialize Data Object"))
+                {
+                    curentCoroutine = EditorCoroutineUtility.StartCoroutine(CreateSerializeDataObject(), this);
                 }
             }
         }
@@ -215,6 +224,30 @@ public partial class {className}
             }
             classScriptPath = "Assets" + classScriptPath.Substring(Application.dataPath.Length);
             AssetDatabase.ImportAsset(classScriptPath);
+        }
+
+        public IEnumerator CreateSerializeDataObject()
+        {
+            var api = new NotionApi(Target);
+            busy = true;
+            var json = "";
+            void SetJson(string val)
+            {
+                json = val;
+            }
+            yield return api.GetQueryDatabaseJson(SetJson);
+
+            var className = RemoveWhitespace(target.name);
+            var path = Directory.GetParent(AssetDatabase.GetAssetPath(target));
+            var generateSerializeObjectScriptPath = Path.Combine(path.FullName, className + "_NoJson" + ".nojson");
+
+            using (var writer = File.CreateText(generateSerializeObjectScriptPath))
+            {
+                writer.Write(json);
+            }
+
+            generateSerializeObjectScriptPath = "Assets" + generateSerializeObjectScriptPath.Substring(Application.dataPath.Length);
+            AssetDatabase.ImportAsset(generateSerializeObjectScriptPath);
         }
 
         public Type GetPropertyTypeFromNotionType(string notionType)

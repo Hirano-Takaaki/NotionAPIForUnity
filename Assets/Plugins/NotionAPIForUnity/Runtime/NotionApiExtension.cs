@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using System.Linq;
 
 namespace NotionAPIForUnity.Runtime
 {
@@ -33,11 +34,6 @@ namespace NotionAPIForUnity.Runtime
             return await api.GetQueryDatabase(callback).ToAsync<DatabaseQuery<T>>();
         }
 
-        public async static Task<DatabasePage<T>[]> ToDatabesePagesAsync<T>(this Task<DatabaseQuery<T>> query) where T : Schema
-        {
-            return (await query).results;
-        }
-
         /// <summary>
         /// データベースのコンテンツの更新
         /// </summary>
@@ -63,6 +59,11 @@ namespace NotionAPIForUnity.Runtime
         public async static Task<DatabasePage<T>> PostPageDatabaseAsync<T>(this NotionApi api, DatabasePage<T> createPage, Action<DatabasePage<T>> callback = null) where T : Schema
         {
             return await api.PostPageDatabase(createPage, callback).ToAsync<DatabasePage<T>>();
+        }
+
+        public async static Task<DatabasePage<T>[]> ToDatabesePagesAsync<T>(this Task<DatabaseQuery<T>> query) where T : Schema
+        {
+            return (await query).results;
         }
     }
 }

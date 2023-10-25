@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b34804d6809d3814185c9084627e0efd, type: 3}
+  m_Script: {fileID: 0}
   m_Name: __ExampleSchema
-  m_EditorClassIdentifier: 
-  apiKey: secret_lP6etHgfxzVhDWIMqGREgVD9nxHNJTG71UP1z1IPgzn
-  databaseId: 7fd3126983a144a398f3e5369a619418
+  m_EditorClassIdentifier: NotionAPIForUnity.Runtime:NotionAPIForUnity.Runtime:DatabaseSchemaObject
+  apiKey: 
+  databaseId: 
   fieldTypes:
   - rich_text
   - select
